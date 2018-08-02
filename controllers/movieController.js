@@ -1,52 +1,156 @@
+const fs = require('fs');
+
 var controller = function() {
     var get = function(req, res) {
-        res.status(200).send({
-            movies: [
-                {
-                    id: 1,
-                    title: "The Movie that Never Existed",
-                    runTime: 120,
-                    releaseDate: "01/01/0001"
-                },
-                {
-                    id: 2,
-                    title: "The Movie that Never Existed 2: The Longer One",
-                    runTime: 160,
-                    releaseDate: "01/01/0002"
-                }
-            ]
+        fs.readFile('db.json', (err, data) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            res.status(200).send(JSON.parse(data).movies);
         });
     };
 
     var getById = function(req, res) {
-        const requestedId = req.params.id;
-        // getMovieById from the DB
-        let payload = {};
-        payload.id = requestedId;
-        payload.title = "You Got a Movie By Id";
-        payload.runTime = 1,
-        payload.releaseDate = "Now"
-        res.status(200).send(payload);
+        fs.readFile('db.json', (err, data) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            const id = +req.params.id;
+            if (id <= 0) {
+                res.status(404).send('Invalid Id');
+            } else {
+                const dbJson = JSON.parse(data);
+                const payload = dbJson.movies[id-1];
+                if (!payload) {
+                    res.status(404).send('Movie not found');
+                } else {
+                    res.status(200).send(payload);
+                }
+            }
+        });
     };
 
     var post = function(req, res) {
-        //add req.body to the movies DB 
-        res.status(201).send(req.body);
+        fs.readFile('db.json', (err, data) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            let dbJson = JSON.parse(data);
+            let payload = {};
+            let emptyIndex;
+            for (let i=0; i<dbJson.movies.length; ++i) {
+                if (!dbJson.movies[i]) {
+                    emptyIndex = i;
+                    break;
+                }
+            }
+            if (emptyIndex >= 0) {
+                req.body.id = emptyIndex + 1;
+                for(let prop in req.body) {
+                    payload[prop] = req.body[prop];
+                }
+                dbJson.movies[emptyIndex] = payload;
+            } else {
+                req.body.id = dbJson.movies.length + 1;
+                for(let prop in req.body) {
+                    payload[prop] = req.body[prop];
+                }
+                dbJson.movies.push(payload);
+            }
+
+            dbJson = JSON.stringify(dbJson)
+            fs.writeFile('db.json', dbJson, (writeErr) => {
+                if (writeErr) {
+                    res.status(500).send(writeErr);
+                }
+                res.status(201).send(payload);
+            });
+        });
     };
 
     var putById = function(req, res) {
-        //updateMovieById on the DB
-        res.status(200).send(req.body);
+        fs.readFile('db.json', (err, data) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            const id = +req.params.id;
+            if (id <= 0) {
+                res.status(404).send('Invalid Id');
+            } else {
+                let dbJson = JSON.parse(data);
+                const status = dbJson.movies[id-1] ? 200 : 201;
+                const payload = {};
+                req.body.id = id;
+                for(let prop in req.body) {
+                    payload[prop] = req.body[prop];
+                }
+                dbJson.movies[id-1] = payload;
+                dbJson = JSON.stringify(dbJson)
+                fs.writeFile('db.json', dbJson, (writeErr) => {
+                    if (writeErr) {
+                        res.status(500).send(writeErr);
+                    }
+                    res.status(status).send(payload);
+                });
+            }
+        });
     };
 
     var patchById = function(req, res) {
-        //updatePartOfMovieById on the DB
-        res.status(200).send(req.body);
+        fs.readFile('db.json', (err, data) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            const id = +req.params.id;
+            if (id <= 0) {
+                res.status(404).send('Invalid Id');
+            } else {
+                let dbJson = JSON.parse(data);
+                const payload = dbJson.movies[id-1];
+                if (!payload) {
+                    res.status(404).send('Movie not found');
+                } else {
+                    req.body.id = id;
+                    for(let prop in req.body) {
+                        payload[prop] = req.body[prop];
+                    }
+                    dbJson = JSON.stringify(dbJson)
+                    fs.writeFile('db.json', dbJson, (writeErr) => {
+                        if (writeErr) {
+                            res.status(500).send(writeErr);
+                        }
+                        res.status(200).send(payload);
+                    });
+                }
+            }
+        });
     };
 
     var deleteById = function(req, res) {
-        //deleteMovieById on the DB
-        res.status(204).send();
+        fs.readFile('db.json', (err, data) => {
+            if (err) {
+                res.status(500).send(err);
+            }
+            const id = +req.params.id;
+            if (id <= 0) {
+                res.status(404).send('Invalid Id');
+            } else {
+                let dbJson = JSON.parse(data);
+                const payload = dbJson.movies[id-1];
+                if (!payload) {
+                    res.status(404).send('Movie not found');
+                } else {
+                    dbJson.movies[id-1] = null;
+                    dbJson = JSON.stringify(dbJson)
+                    fs.writeFile('db.json', dbJson, (writeErr) => {
+                        if (writeErr) {
+                            res.status(500).send(writeErr);
+                        }
+                        res.status(204).send(payload);
+                    });
+                }
+            }
+        });
     };
 
     return {

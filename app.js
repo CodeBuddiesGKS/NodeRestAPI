@@ -1,6 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const fs = require('fs');
+
+const dbRawData = fs.readFileSync('db.json');
+const db = JSON.parse(dbRawData);
 
 const corsOptions = {
     origin: 'http://example.com', // replace this
