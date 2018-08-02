@@ -1,0 +1,28 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "The Movie that Never Existed",
+      "runTime": 121,
+      "releaseDate": "01/01/0001"
+    },
+    {
+      "id": 2,
+      "title": "The Movie that Never Existed 5: Return of the Movie",
+      "runTime": 122,
+      "releaseDate": "01/01/0002"
+    },
+    {
+      "id": 3,
+      "title": "The Movie that Never Existed 6: Revenge of the Movie",
+      "runTime": 123,
+      "releaseDate": "01/01/0003"
+    },
+    {
+      "title": "The Movie that Never Existed 1: The Phantom Movie",
+      "runTime": 124,
+      "releaseDate": "01/01/0004",
+      "id": 4
+    }
+  ]
+}
