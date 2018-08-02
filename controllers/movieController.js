@@ -58,7 +58,7 @@ var controller = function() {
                 dbJson.movies.push(payload);
             }
 
-            dbJson = JSON.stringify(dbJson)
+            dbJson = JSON.stringify(dbJson, null, 2)
             fs.writeFile('db.json', dbJson, (writeErr) => {
                 if (writeErr) {
                     res.status(500).send(writeErr);
@@ -85,7 +85,7 @@ var controller = function() {
                     payload[prop] = req.body[prop];
                 }
                 dbJson.movies[id-1] = payload;
-                dbJson = JSON.stringify(dbJson)
+                dbJson = JSON.stringify(dbJson, null, 2)
                 fs.writeFile('db.json', dbJson, (writeErr) => {
                     if (writeErr) {
                         res.status(500).send(writeErr);
@@ -114,7 +114,7 @@ var controller = function() {
                     for(let prop in req.body) {
                         payload[prop] = req.body[prop];
                     }
-                    dbJson = JSON.stringify(dbJson)
+                    dbJson = JSON.stringify(dbJson, null, 2)
                     fs.writeFile('db.json', dbJson, (writeErr) => {
                         if (writeErr) {
                             res.status(500).send(writeErr);
@@ -141,7 +141,7 @@ var controller = function() {
                     res.status(404).send('Movie not found');
                 } else {
                     dbJson.movies[id-1] = null;
-                    dbJson = JSON.stringify(dbJson)
+                    dbJson = JSON.stringify(dbJson, null, 2)
                     fs.writeFile('db.json', dbJson, (writeErr) => {
                         if (writeErr) {
                             res.status(500).send(writeErr);
