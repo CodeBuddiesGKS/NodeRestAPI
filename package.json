@@ -1,0 +1,25 @@
+{
+  "name": "noderestapi",
+  "version": "1.0.0",
+  "description": "A Rest API written using Node.js and Express.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeBuddiesGKS/NodeRestAPI.git"
+  },
+  "author": "Gavin Bonneville",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CodeBuddiesGKS/NodeRestAPI/issues"
+  },
+  "homepage": "https://github.com/CodeBuddiesGKS/NodeRestAPI#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3"
+  }
+}
